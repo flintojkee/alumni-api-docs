@@ -37,11 +37,12 @@ paths:
                 - email
                 - password
             examples: {}
-  /register:
+  /alumni/register:
     get:
       summary: Your GET endpoint
       tags: []
       responses: {}
       operationId: get-register
+    parameters: []
 components:
   schemas: {}
