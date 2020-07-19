@@ -1,0 +1,47 @@
+openapi: 3.0.0
+info:
+  title: alumni-api
+  version: '1.0'
+servers:
+  - url: 'http://localhost:3000'
+paths:
+  /login:
+    post:
+      summary: ''
+      operationId: post-login
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  userId:
+                    type: string
+                  userRole:
+                    type: string
+                  accessToken:
+                    type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                password:
+                  type: string
+              required:
+                - email
+                - password
+            examples: {}
+  /register:
+    get:
+      summary: Your GET endpoint
+      tags: []
+      responses: {}
+      operationId: get-register
+components:
+  schemas: {}
