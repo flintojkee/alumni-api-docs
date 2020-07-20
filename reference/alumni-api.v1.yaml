@@ -17,11 +17,25 @@ paths:
               schema:
                 type: object
                 properties:
-                  userId:
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                      accessToken:
+                        type: string
+                      role:
+                        type: string
+                        enum:
+                          - Admin
+                          - Operator
+                          - Alumni
+                  status:
                     type: string
-                  userRole:
-                    type: string
-                  accessToken:
+                    enum:
+                      - Error
+                      - Success
+                  message:
                     type: string
       requestBody:
         content:
@@ -44,5 +58,264 @@ paths:
       responses: {}
       operationId: get-register
     parameters: []
+    post:
+      summary: ''
+      operationId: post-alumni-register
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+            application/xml:
+              schema:
+                allOf:
+                  - {}
+                  - {}
+                type: object
+              examples: {}
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                password:
+                  type: string
+                alumniToken:
+                  type: string
+                allowShowContacts:
+                  type: string
+  /alumni/confirm:
+    get:
+      summary: Your GET endpoint
+      tags: []
+      responses: {}
+      operationId: get-alumni-confirm
+    post:
+      summary: ''
+      operationId: post-alumni-confirm
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      accessToken:
+                        type: string
+                      alumni:
+                        $ref: '#/components/schemas/Alumni'
+                  status:
+                    type: string
+                  message:
+                    type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                alumniToken:
+                  type: string
+  '/alumni/{id}':
+    parameters:
+      - schema:
+          type: string
+        name: id
+        in: path
+        required: true
+    get:
+      summary: Your GET endpoint
+      tags: []
+      responses: {}
+      operationId: get-alumni-id
+      parameters:
+        - schema:
+            type: string
+          in: header
+          name: Authorization
+          description: ''
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                data:
+                  type: object
+                  properties:
+                    alumni:
+                      $ref: '#/components/schemas/Alumni'
+                status:
+                  type: string
+                message:
+                  type: string
+    put:
+      summary: ''
+      operationId: put-alumni-id
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  alumni:
+                    $ref: '#/components/schemas/Alumni'
+                  status:
+                    type: string
+                  message:
+                    type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Alumni'
+  /alumni:
+    get:
+      summary: Your GET endpoint
+      tags: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      alumnis:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/Alumni'
+                  status:
+                    type: string
+                  message:
+                    type: string
+      operationId: get-alumni
+      parameters:
+        - schema:
+            type: boolean
+          in: query
+          name: registered
+    parameters: []
 components:
-  schemas: {}
+  schemas:
+    User:
+      title: User
+      type: object
+      properties:
+        id:
+          type: string
+        email:
+          type: string
+        password:
+          type: string
+        role:
+          type: string
+          enum:
+            - Operator
+            - Alumni
+            - Admin
+    Alumni:
+      title: Alumni
+      type: object
+      properties:
+        id:
+          type: string
+        odooId:
+          type: string
+        userId:
+          type: string
+        name:
+          type: string
+          description: '@odoo: name'
+        birthDate:
+          type: string
+          description: '@odoo: birth_date'
+        avatar:
+          type: string
+          description: |-
+            link on avatar image from S3 
+            @odoo: image_1920
+        countryName:
+          type: string
+          description: '@odoo: contact_country'
+        countryId:
+          type: number
+        city:
+          type: string
+        mobile:
+          type: string
+        skype:
+          type: string
+        telegram:
+          type: string
+        viber:
+          type: string
+        facebook:
+          type: string
+        linkedin:
+          type: string
+        diplomaNaukma:
+          type: boolean
+        bachelorDegree:
+          type: boolean
+        bachelorFaculty:
+          type: string
+        bachelorSpeciality:
+          type: string
+        bachelorYearIn:
+          type: string
+        bachelorYearOut:
+          type: string
+        masterDegree:
+          type: boolean
+        masterFaculty:
+          type: string
+        masterSpeciality:
+          type: string
+        masterYearIn:
+          type: string
+        masterYearOut:
+          type: string
+        companyId:
+          type: integer
+        companyName:
+          type: string
+        jobPosition:
+          type: string
+      required:
+        - id
+        - odooId
+    Response:
+      title: Response
+      type: object
+      x-examples: {}
+      properties:
+        data:
+          oneOf:
+            - $ref: '#/components/schemas/User'
+            - $ref: '#/components/schemas/Alumni'
+        message:
+          type: string
+        status:
+          type: string
+          enum:
+            - Error
+            - Success
+      required:
+        - data
+        - message
+        - status
